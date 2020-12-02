@@ -16,4 +16,5 @@ dist
 node_modules
 */package-lock.json
 */.eslintcache
+*/.DS_Store
 
