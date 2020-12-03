@@ -6,7 +6,7 @@ import java.time.Clock
 import Actions.UserAction
 import Models.User
 import javax.inject._
-import pdi.jwt.{JwtClaim, JwtJson}
+import pdi.jwt.{JwtAlgorithm, JwtClaim, JwtJson}
 import play.api.Configuration
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -15,6 +15,11 @@ import utils.PasswordUtil
 
 @Singleton
 class HomeController @Inject()(cc: ControllerComponents, config: Configuration,userAction: UserAction) extends AbstractController(cc) {
+
+  val jwtSecret = config.get[String]("jwtSecret")
+  val tokenExpiry = 1200
+  val hashKey = config.get[String]("loginHashKey")
+
 
   def signin() = Action(parse.json[User]) { request =>
 
@@ -26,7 +31,7 @@ class HomeController @Inject()(cc: ControllerComponents, config: Configuration,u
 
     if (authenticated) {
       val claim = Json.obj(("user", user.userName))
-      Ok(JwtJson.encode(JwtClaim(claim.toString()).issuedNow.expiresIn(1200)))
+      Ok(JwtJson.encode(JwtClaim(claim.toString()).issuedNow.expiresIn(tokenExpiry),jwtSecret,JwtAlgorithm.HS256))
     } else {
       Unauthorized("Sorry dude.. It is a strict NO without a proper id card.")
     }
@@ -36,7 +41,7 @@ class HomeController @Inject()(cc: ControllerComponents, config: Configuration,u
   def register() = Action(parse.json[User]) { request =>
     val user = request.body
     //This registration is a temp solution. This should be replaced by better persistance mechanism like db
-    PasswordUtil.users(user.userName) = PasswordUtil.hashPassword(user.password,"1234qwer".getBytes())
+    PasswordUtil.users(user.userName) = PasswordUtil.hashPassword(user.password,hashKey.getBytes())
     Ok("Registration is successful")
   }
 
