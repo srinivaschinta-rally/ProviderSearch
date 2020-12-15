@@ -7,7 +7,7 @@ function Logout() {
         window.location.reload();
     }
 
-    return <a href='#' onClick={logout} style={{color:'inherit'}}>Logout</a>;
+    return <span onClick={logout} style={{color:'inherit',cursor:'pointer'}}>Logout</span>;
 }
 
 export default Logout;

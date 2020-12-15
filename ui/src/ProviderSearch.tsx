@@ -6,8 +6,8 @@ import { Container, Row, Col } from 'react-bootstrap';
 import SearchBox from "./SearchBox";
 
 export interface Provider {
-  name: String;
-  specialty: String;
+  name: string;
+  specialty: string;
   locations: Location[]
 }
 
@@ -46,7 +46,7 @@ function ProviderSearch() {
       },
       error => {
         setIsLoaded(true);
-        if (error.response && error.response.status == 401)
+        if (error.response && error.response.status === 401)
           setUnauthorized(true);
         setError(error);
       }
@@ -71,7 +71,7 @@ function ProviderSearch() {
           providers.map(p => {
             const location = p.locations[0];
             const { address } = location;
-            return <div className='provider'>
+            return <div className='provider' key={p.name}>
               <Row>
                 <Col md={8} sm={8}>
                   <Row>
@@ -95,7 +95,7 @@ function ProviderSearch() {
                         {
                           ((p.locations.length - 1) > 0) &&
                           <div>
-                            <a href='#' > View additional locations({p.locations.length - 1})</a>
+                            <a href='/' > View additional locations({p.locations.length - 1})</a>
                           </div>
 
                         }
@@ -107,18 +107,18 @@ function ProviderSearch() {
                 <Col md sm>
                   <div className='provider-details'>
                     {
-                      (location.anp === 'A') && <a href='#'>Accepting all patients</a>
+                      (location.anp === 'A') && <a href='/'>Accepting all patients</a>
                     }
                     {
-                      (location.anp === 'E') && <a href='#'>Accepting existing patients</a>
+                      (location.anp === 'E') && <a href='/'>Accepting existing patients</a>
                     }
                     {
-                      (location.anp === 'N') && <a href='#'>Not accepting patients</a>
+                      (location.anp === 'N') && <a href='/'>Not accepting patients</a>
                     }
                   </div>
                   <br/>
                   <div className='provider-details'>
-                  <a href='#'>Not evaluated for premium care</a>
+                  <a href='/'>Not evaluated for premium care</a>
                   </div>
                 </Col>
               </Row>

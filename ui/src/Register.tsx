@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { Redirect } from "react-router";
-import { Button, FormText, FormLabel, Form } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 
 
 export interface LoginProps {

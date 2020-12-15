@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Provider } from './ProviderSearch';
 import axios from "axios";
-import { Button, Form, Row, Col } from 'react-bootstrap';
+import { Form, Row } from 'react-bootstrap';
 
 
 interface SearchBoxProps {
@@ -13,46 +13,41 @@ export interface SearchBoxState {
     message: string;
 }
 
-class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
-    constructor(props) {
-        super(props);
-        this.state = { text: '', message: '' };
-        this.handleTextChange = this.handleTextChange.bind(this);
-        this.handleSearch = this.handleSearch.bind(this);
-    }
+export const SearchBox = (props: SearchBoxProps) => {
 
-    getResults = (text) => {
-        axios.get("/api/search",{ params: { text: text } })
+    const [text, setText] = useState('');
+    const [message, setMessage] = useState('');
+
+    const getResults = (text) => {
+        axios.get("/api/search", { params: { text: text } })
             .then(providers => {
                 if (providers.status !== 200)
-                    this.setState({ message: "No..No.." })
+                    setMessage("No..No..")
                 else {
-                    this.props.search(providers.data);
+                    props.search(providers.data);
                 }
-                
+
             },
                 error => {
-                    this.setState({ message: error.response.data });
+                    setMessage(error.response.data);
                 }
             );
     }
 
-    handleSearch(event) {
-        this.getResults(this.state.text);
-        event.preventDefault();
+    const handleTextChange = (event) => {
+        setText(event.target.value);
+        getResults(event.target.value);
     }
-    handleTextChange(event) {
-        this.setState({ text: event.target.value });
-        this.getResults(event.target.value);
-    }
-    render() {
-        return (<div style={{backgroundColor:'#E7E5E5',padding:'30px',marginTop:'30px'}}>
-            <Row>
-                <Form.Control type="text" style={{width:'100%'}}  placeholder="Search here" onChange={this.handleTextChange} value={this.state.text} />
-            </Row>
-        </div>);
-    }
-}
+
+    return (<div style={{ backgroundColor: '#E7E5E5', padding: '30px', marginTop: '30px' }}>
+        <Row>
+            <Form.Control type="text" style={{ width: '100%' }} placeholder="Search here" onChange={handleTextChange} value={text} />
+            <Form.Control.Feedback type="invalid">
+            {message}
+          </Form.Control.Feedback>
+        </Row>
+    </div>);
+
+};
 
 export default SearchBox;
-
