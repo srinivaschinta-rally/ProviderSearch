@@ -1,8 +1,8 @@
 # ProviderSearch
 
-Requirements to run this App: Node 12 or above, scala, sbt
+## Requirements to run this App: Node 12 or above, scala, sbt
 
-Steps to run the App: sbt run
+## Steps to run the App: sbt run
 
 
 
